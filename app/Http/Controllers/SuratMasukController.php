@@ -17,8 +17,9 @@ class SuratMasukController extends Controller
         $text = "Apakah anda yakin?";
         confirmDelete($title, $text);
         $suratMasuk = SuratMasuk::latest()->get();
-        $listUser = User::where('role', 0)->get();
-        return view ('admin.masuk.index', compact('suratMasuk', 'listUser'));
+        $listakun = User::where('role', '!=', 'admin')->get();
+        $listUser = User::where('role', 'user')->get();
+        return view ('admin.masuk.index', compact('suratMasuk', 'listakun', 'listUser'));
     }
 
     /**

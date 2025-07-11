@@ -18,6 +18,6 @@ class SuratMasuk extends Model
 
     
     public function disposisi(){
-        return $this->hasMany(Disposisi::class);
+        return $this->hasMany(Disposisi::class, 'surat_masuk_id');
     }
 }

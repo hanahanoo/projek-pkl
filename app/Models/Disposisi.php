@@ -8,7 +8,7 @@ use App\Models\Disposisi;
 
 class Disposisi extends Model
 {
-    protected $fillable = ['id', 'surat_masuk_id', 'user_id', 'catatan_disposisi'];
+    protected $fillable = ['id','pengirim_id', 'surat_masuk_id', 'user_id', 'catatan_disposisi'];
     public $timestamp = true;
 
     public function suratMasuk(){
@@ -16,6 +16,11 @@ class Disposisi extends Model
     }
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function pengirim()
+    {
+        return $this->belongsTo(User::class, 'pengirim_id'); // pengirim
     }
 }

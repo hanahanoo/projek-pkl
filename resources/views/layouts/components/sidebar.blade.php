@@ -78,13 +78,23 @@
               </a>
             </li>
             <!-- User interface -->
-            <li class="menu-item {{ Route::is('masuk.index') ? 'active' : '' }} {{ Route::is('masuk.create') ? 'active' : '' }} {{ Route::is('masuk.edit') ? 'active' : '' }}">
+            @if (auth()->user()->role === 'admin')
+            <li class="menu-item {{ Route::is('masuk.index') ? 'active' : '' }}">
               <a href="{{ route('masuk.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ri ri-mail-add-line"></i>
                 <div data-i18n="User interface">Surat Masuk</div>
               </a>
             </li>
-
+            @endif
+            @if (auth()->user()->role === 'kepsek')
+            <li class="menu-item {{ Route::is('kepsek.masuk.index') ? 'active' : '' }}">
+              <a href="{{ route('kepsek.masuk.index') }}" class="menu-link">
+                <i class="menu-icon icon-base ri ri-mail-add-line"></i>
+                <div data-i18n="User interface">Surat Masuk</div>
+              </a>
+            </li>
+            @endif
+            @if (auth()->user()->role === 'admin')
             <!-- Extended components -->
             <li class="menu-item {{ Route::is('keluar.index') ? 'active' : '' }} {{ Route::is('keluar.create') ? 'active' : '' }} {{ Route::is('keluar.edit') ? 'active' : '' }}">
               <a href="{{ route('keluar.index') }}" class="menu-link">
@@ -92,5 +102,6 @@
                 <div data-i18n="User interface">Surat Keluar</div>
               </a>
             </li>
+            @endif
           </ul>
         </aside>

@@ -1,21 +1,25 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use Illuminate\Http\Request;
-use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\SuratMasuk;
+use App\Models\User;
 use App\Models\Disposisi;
+use Illuminate\Http\Request;
 use Auth;
-
-class DisposisiController extends Controller
+class KepsekController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $title = 'Hapus Data!';
+        $text = "Apakah anda yakin?";
+        confirmDelete($title, $text);
+        if(Auth::user()->role === 'kepsek'){
+            $suratMasuk = SuratMasuk::whereHas('disposisi.user', function($query) {
+                $query->where('role', 'kepsek');
+            })->with(['disposisi.user'])->get();
+        }
+        $listUser = User::where('role', 'user')->get();
+        return view ('admin.masuk.index', compact('suratMasuk', 'listUser'));
     }
 
     /**
@@ -40,11 +44,11 @@ class DisposisiController extends Controller
         $disposisi->save();
         if($disposisi){
             $suratMasuk = SuratMasuk::findOrFail($suratMasukID->id);
-            $suratMasuk->status = 'didisposisi';
+            $suratMasuk->status = 'diproses';
             $suratMasuk->save();
         }
-        Alert::success('Berhasil Mengirim.');
-        return redirect()->route('masuk.index');
+        toast('Data berhasil ditambahkan', 'success');
+        return redirect()->route('kepsek.masuk.index');
     }
 
     /**

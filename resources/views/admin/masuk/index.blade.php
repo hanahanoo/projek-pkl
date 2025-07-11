@@ -3,12 +3,14 @@
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
     <h5 class="mb-0">Surat Masuk</h5>
+    @if(Auth::user()->role !== 'kepsek')
     <a class="btn create-new btn-primary" href="{{ route('masuk.create') }}">
       <span class="d-flex align-items-center gap-2">
         <i class="icon-base ri ri-add-large-line"></i>
         <span class="d-none d-sm-inline-block">Add New Record</span>
       </span>
     </a>
+    @endif
   </div>
   <div class="table-responsive text-nowrap">
     <table class="table">
@@ -45,11 +47,21 @@
                 <i class="icon-base ri ri-more-2-line icon-18px"></i>
               </button>
               <div class="dropdown-menu">
+                @if(Auth::user()->role === 'admin')
                 @if($item->status !== 'didisposisi')
                 <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#basicModal-{{$item->id}}">
                   <i class="icon-base ri ri-mail-send-line icon-18px me-1"></i>
                   Disposisi
                 </a>
+                @endif
+                @endif
+                @if(Auth::user()->role === 'kepsek')
+                @if($item->status !== 'diproses')
+                <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#basicModal-{{$item->id}}">
+                  <i class="icon-base ri ri-mail-send-line icon-18px me-1"></i>
+                  Disposisi
+                </a>
+                @endif
                 @endif
                 <a class="dropdown-item" href="{{ route('masuk.edit', $item->id) }}">
                   <i class="icon-base ri ri-pencil-line icon-18px me-1"></i>
@@ -67,7 +79,11 @@
   </div>
 </div>
 @foreach($suratMasuk as $data)
+@if(Auth::user()->role == 'admin')
 <form action="{{ route('disposisi.store')}}" method="post">
+  @elseif(Auth::user()->role == 'kepsek')
+  <form action="{{ route('kepsek.disposisi.store')}}" method="post">
+@endif
   @csrf
 <div class="modal fade" id="basicModal-{{$data->id}}" tabindex="-1">
   <div class="modal-dialog" role="document">
@@ -93,9 +109,15 @@
           <div class="col mb-6 mt-2">
             <div class="form-floating form-floating-outline mb-6">
               <select class="form-select" id="exampleFormControlSelect1" aria-label="Default select example" name="user_id">
-                @foreach($listUser as $data)
+                @if(Auth::user()->role === 'admin')
+                @foreach($listakun as $data)
                 <option value="{{$data->id}}">{{$data->name}}</option>
                 @endforeach
+                @elseif(Auth::user()->role === 'kepsek')
+                @foreach($listUser as $item)
+                <option value="{{$item->id}}">{{$item->name}}</option>
+                @endforeach
+                @endif
               </select>
               <label for="exampleFormControlSelect1">Tujuan Disposisi</label>
             </div>
