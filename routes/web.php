@@ -10,27 +10,34 @@ use App\Http\Controllers\SuratKeluarController;
 use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\InboxController;
+use App\Http\Controllers\UsersController;
 
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 
-Auth::routes();
-
+Auth::routes([
+    'register' => false, // matiin register route
+]);
+Route::get('/download-surat/{id}', [SuratMasukController::class, 'download'])->name('surat.download');
+Route::get('arsip', [InboxController::class, 'arsip'])->name('arsip.index');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::resource('inbox', InboxController::class);
 
 // Route::get('/masuk', [App\Http\Controllers\SuratMasukController::class, 'index']);
 
 // Route::get('/', [DashboardController::class, 'index']);
 // Route::resource('admin.masuk', DashboardController::class);
 
-Route::prefix('admin')->middleware(['auth', IsAdmin::class])->group(function (){
+Route::prefix('admin')->as('admin.')->middleware(['auth', IsAdmin::class])->group(function (){
     Route::resource('masuk', SuratMasukController::class);
     Route::resource('keluar', SuratKeluarController::class);
     Route::resource('disposisi', DisposisiController::class);
+    Route::resource('users', UsersController::class);
     
 });
 

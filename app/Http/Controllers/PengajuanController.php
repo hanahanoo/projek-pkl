@@ -3,19 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use RealRashid\SweetAlert\Facades\Alert;
-use App\Models\SuratMasuk;
-use App\Models\Disposisi;
-use Auth;
 
-class DisposisiController extends Controller
+class PengajuanController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $pengajuan = Pengajuan::with('category')->orderBy('id', 'desc')->get();
+        return view('pengajuan.index', compact('pengajuan'));
     }
 
     /**
@@ -23,7 +20,8 @@ class DisposisiController extends Controller
      */
     public function create()
     {
-        //
+        $user = User::all();
+        return view('pengajuan.create', compact('user'));
     }
 
     /**
@@ -31,20 +29,21 @@ class DisposisiController extends Controller
      */
     public function store(Request $request)
     {
-        $suratMasukID = SuratMasuk::where('no_surat', $request->no_surat)->first();
-        $disposisi = new Disposisi();
-        $disposisi->pengirim_id = Auth::user()->id;
-        $disposisi->surat_masuk_id = $suratMasukID->id;
-        $disposisi->user_id = $request->user_id;
-        $disposisi->catatan_disposisi = $request->catatan;
-        $disposisi->save();
-        if($disposisi){
-            $suratMasuk = SuratMasuk::findOrFail($suratMasukID->id);
-            $suratMasuk->status = 'didisposisi';
-            $suratMasuk->save();
-        }
-        Alert::success('Berhasil Mengirim.');
-        return redirect()->route('admin.masuk.index');
+        $request->validate([
+            'user_id' => 'required|exists:user_id',
+            'tujuan_surat' => 'required|string',
+            'perihal' => 'required|string',
+            'isi_surat' => 'required|string',
+        ]);
+        
+        $pengajuan->user_id = $request->user_id;
+        $pengajuan->tujuan_surat = $request->tujuan_surat;
+        $pengajuan->perihal = $request->perihal;
+        $pengajuan->isi_surat = $request->isi_surat;
+        $pengajuan->save();
+
+
+        return redirect()->route('pengajuan.index')->with('success');
     }
 
     /**

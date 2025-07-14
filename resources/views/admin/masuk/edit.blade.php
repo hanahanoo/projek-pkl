@@ -10,7 +10,7 @@
     </div>
 
     <div class="card-body demo-vertical-spacing demo-only-element">
-      <form action="{{ route('masuk.update', $suratMasuk->id) }}" method="POST" enctype="multipart/form-data">
+      <form action="{{ route('admin.masuk.update', $suratMasuk->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="form-floating form-floating-outline mb-6">

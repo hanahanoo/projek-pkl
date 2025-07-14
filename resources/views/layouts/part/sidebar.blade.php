@@ -78,52 +78,17 @@
               </a>
             </li>
             <!-- User interface -->
-            @if (auth()->user()->role === 'admin')
-            <li class="menu-item {{ Route::is('admin.users.index') ? 'active' : '' }}">
-              <a href="{{ route('admin.users.index') }}" class="menu-link">
-                <i class="menu-icon icon-base ri ri-group-line"></i>
-                <div data-i18n="User interface">Users</div>
-              </a>
-            </li>
-            @endif
-            @if (auth()->user()->role === 'admin')
-            <li class="menu-item {{ Route::is('admin.masuk.index') ? 'active' : '' }}">
-              <a href="{{ route('admin.masuk.index') }}" class="menu-link">
+            <li class="menu-item {{ Route::is('masuk.index') ? 'active' : '' }}">
+              <a href="{{ route('masuk.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ri ri-mail-add-line"></i>
                 <div data-i18n="User interface">Surat Masuk</div>
               </a>
             </li>
-            @endif
-            @if (auth()->user()->role === 'user')
-            <li class="menu-item {{ Route::is('inbox.index') ? 'active' : '' }}">
-              <a href="{{ route('inbox.index') }}" class="menu-link">
-                <i class="menu-icon icon-base ri ri-mail-unread-line"></i>
-                <div data-i18n="User interface">inbox</div>
-              </a>
-            </li>
-            <li class="menu-item {{ Route::is('arsip.index') ? 'active' : '' }}">
-              <a href="{{ route('arsip.index') }}" class="menu-link">
-                <i class="menu-icon icon-base ri ri-archive-line"></i>
-                <div data-i18n="User interface">Arsip</div>
-              </a>
-            </li>
-            @endif
-            @if (auth()->user()->role === 'kepsek')
-            <li class="menu-item {{ Route::is('kepsek.masuk.index') ? 'active' : '' }}">
-              <a href="{{ route('kepsek.masuk.index') }}" class="menu-link">
+            <li class="menu-item {{ Route::is('pengajuan.index') ? 'active' : '' }}">
+              <a href="{{ route('pengajuan.index') }}" class="menu-link">
                 <i class="menu-icon icon-base ri ri-mail-add-line"></i>
-                <div data-i18n="User interface">Surat Masuk</div>
+                <div data-i18n="User interface">Pengajuan Surat</div>
               </a>
             </li>
-            @endif
-            @if (auth()->user()->role === 'admin')
-            <!-- Extended components -->
-            <li class="menu-item {{ Route::is('admin.keluar.index') ? 'active' : '' }} {{ Route::is('keluar.create') ? 'active' : '' }} {{ Route::is('keluar.edit') ? 'active' : '' }}">
-              <a href="{{ route('admin.keluar.index') }}" class="menu-link">
-                <i class="menu-icon icon-base ri ri-mail-send-line"></i>
-                <div data-i18n="User interface">Surat Keluar</div>
-              </a>
-            </li>
-            @endif
           </ul>
         </aside>

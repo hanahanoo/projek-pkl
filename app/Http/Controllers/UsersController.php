@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
-use RealRashid\SweetAlert\Facades\Alert;
-use App\Models\SuratMasuk;
-use App\Models\Disposisi;
-use Auth;
-
-class DisposisiController extends Controller
+use Illuminate\Support\Facades\Hash;
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $title = 'Hapus Data!';
+        $text = "Apakah anda yakin?";
+        confirmDelete($title, $text);
+        $users = User::where('role', 'user')->get();
+        return view('admin.users.index', compact('users'));
     }
 
     /**
@@ -23,7 +24,7 @@ class DisposisiController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.users.create');
     }
 
     /**
@@ -31,20 +32,20 @@ class DisposisiController extends Controller
      */
     public function store(Request $request)
     {
-        $suratMasukID = SuratMasuk::where('no_surat', $request->no_surat)->first();
-        $disposisi = new Disposisi();
-        $disposisi->pengirim_id = Auth::user()->id;
-        $disposisi->surat_masuk_id = $suratMasukID->id;
-        $disposisi->user_id = $request->user_id;
-        $disposisi->catatan_disposisi = $request->catatan;
-        $disposisi->save();
-        if($disposisi){
-            $suratMasuk = SuratMasuk::findOrFail($suratMasukID->id);
-            $suratMasuk->status = 'didisposisi';
-            $suratMasuk->save();
-        }
-        Alert::success('Berhasil Mengirim.');
-        return redirect()->route('admin.masuk.index');
+        $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|unique:users',
+            'password' => 'required|confirmed|min:8'
+        ]);
+
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password)    ;
+        $user->save();
+
+        toast('Data berhasil ditambahkan', 'success');
+        return redirect()->route('users.index');
     }
 
     /**

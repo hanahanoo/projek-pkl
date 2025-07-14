@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SuratKeluar;
+use App\Models\SuratMasuk;
 use Illuminate\Http\Request;
 
 class SuratKeluarController extends Controller
@@ -80,7 +81,7 @@ class SuratKeluarController extends Controller
             'perihal' => 'required|string',
             'file_surat' => 'required|string',
         ]);
-        $suratMasuk = SuratMasuk::findOrFail($id);
+        $suratKeluar = SuratKeluar::findOrFail($id);
         $suratKeluar->no_surat = $request->no_surat;
         $suratKeluar->tgl_surat = $request->tgl_surat;
         $suratKeluar->tujuan = $request->tujuan;

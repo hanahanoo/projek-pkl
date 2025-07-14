@@ -2,9 +2,9 @@
 @section('content')
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
-    <h5 class="mb-0">Surat Masuk</h5>
+    <h5 class="mb-0">Data User</h5>
     @if(Auth::user()->role !== 'kepsek')
-    <a class="btn create-new btn-primary" href="{{ route('admin.masuk.create') }}">
+    <a class="btn create-new btn-primary" href="{{ route('admin.users.create') }}">
       <span class="d-flex align-items-center gap-2">
         <i class="icon-base ri ri-add-large-line"></i>
         <span class="d-none d-sm-inline-block">Add New Record</span>
@@ -16,28 +16,22 @@
     <table class="table">
       <thead>
         <tr>
-          <th>No Surat</th>
-          <th>Tgl Surat</th>
-          <th>Tgl Terima</th>
-          <th>Pengirim</th>
-          <th>Perihal</th>
-          <th>File Surat</th>
-          <th>Status</th>
+          <th>No</th>
+          <th>Nama Lengkap</th>
+          <th>Email</th>
+          <th>Password</th>
+          <th>Role</th>
           <th>Actions</th>
         </tr>
       </thead>
       <tbody class="table-border-bottom-0">
-        @foreach($suratMasuk as $item)
+        @foreach($users as $item)
         <tr>
-          <td>{{$item->no_surat}}</td>
-          <td>{{$item->tgl_surat}}</td>
-          <td>{{$item->tgl_terima}}</td>
-          <td>{{$item->pengirim}}</td>
-          <td>{{$item->perihal}}</td>
-          <td>{{$item->file_surat}}</td>
-          <td>
-            <span class="badge rounded-pill @if($item->status == 'diproses') bg-label-primary @elseif($item->status == 'didisposisi') bg-label-info @elseif($item->status == 'ditindaklanjuti') bg-label-warning @endif  me-1">{{$item->status}}</span>
-          </td>
+          <td>{{$loop->iteration}}</td>
+          <td>{{$item->name}}</td>
+          <td>{{$item->email}}</td>
+          <td>{{$item->password}}</td>
+          <td>{{$item->role}}</td>
           <td>
             <div class="dropdown">
               <button
@@ -63,10 +57,10 @@
                 </a>
                 @endif
                 @endif
-                <a class="dropdown-item" href="{{ route('admin.masuk.edit', $item->id) }}">
+                <a class="dropdown-item" href="{{ route('admin.users.edit', $item->id) }}">
                   <i class="icon-base ri ri-pencil-line icon-18px me-1"></i>
                   Edit</a>
-                <a class="dropdown-item" href="{{ route('admin.masuk.destroy', $item->id) }}" data-confirm-delete="true">
+                <a class="dropdown-item" href="{{ route('admin.users.destroy', $item->id) }}" data-confirm-delete="true">
                   <i class="icon-base ri ri-delete-bin-6-line icon-18px me-1"></i>
                   Delete</a>
               </div>
@@ -78,7 +72,7 @@
     </table>
   </div>
 </div>
-@foreach($suratMasuk as $data)
+@foreach($users as $data)
 @if(Auth::user()->role == 'admin')
 <form action="{{ route('admin.disposisi.store')}}" method="post">
   @elseif(Auth::user()->role == 'kepsek')
@@ -109,15 +103,6 @@
           <div class="col mb-6 mt-2">
             <div class="form-floating form-floating-outline mb-6">
               <select class="form-select" id="exampleFormControlSelect1" aria-label="Default select example" name="user_id">
-                @if(Auth::user()->role === 'admin')
-                @foreach($listakun as $data)
-                <option value="{{$data->id}}">{{$data->name}}</option>
-                @endforeach
-                @elseif(Auth::user()->role === 'kepsek')
-                @foreach($listUser as $item)
-                <option value="{{$item->id}}">{{$item->name}}</option>
-                @endforeach
-                @endif
               </select>
               <label for="exampleFormControlSelect1">Tujuan Disposisi</label>
             </div>

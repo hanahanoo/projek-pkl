@@ -4,13 +4,13 @@
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="mb-0">Form Controls</h5>
-      <a href="{{ route('keluar.index') }}" class="btn btn-outline-secondary">
+      <a href="{{ route('admin.keluar.index') }}" class="btn btn-outline-secondary">
         <i class="ri ri-arrow-left-line me-1"></i> Kembali
       </a>
     </div>
 
     <div class="card-body demo-vertical-spacing demo-only-element">
-      <form action="{{ route('keluar.update', $suratKeluar->id) }}" method="POST" enctype="multipart/form-data">
+      <form action="{{ route('admin.keluar.update', $suratKeluar->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         <div class="form-floating form-floating-outline mb-6">
