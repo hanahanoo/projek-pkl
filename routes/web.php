@@ -11,7 +11,10 @@ use App\Http\Controllers\DisposisiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\InboxController;
+use App\Http\Controllers\PengajuanController;
 use App\Http\Controllers\UsersController;
+use App\Http\Middleware\isUser;
+use App\Models\PengajuanSurat;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -20,13 +23,17 @@ use App\Http\Controllers\UsersController;
 Auth::routes([
     'register' => false, // matiin register route
 ]);
-Route::get('/download-surat/{id}', [SuratMasukController::class, 'download'])->name('surat.download');
-Route::get('arsip', [InboxController::class, 'arsip'])->name('arsip.index');
+Route::get('/download-surat-masuk/{id}', [HomeController::class, 'download'])->name('surat.download');
+Route::prefix('user')->middleware(['auth', isUser::class])->group(function (){
+    Route::resource('inbox', InboxController::class);
+    Route::resource('pengajuan', PengajuanController::class);
+    Route::get('arsip', [InboxController::class, 'arsip'])->name('arsip.index');
+});
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/download-surat/{id}', [PengajuanController::class, 'download'])->name('pengajuan.download');
 
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::resource('inbox', InboxController::class);
 
 // Route::get('/masuk', [App\Http\Controllers\SuratMasukController::class, 'index']);
 
@@ -34,6 +41,7 @@ Route::resource('inbox', InboxController::class);
 // Route::resource('admin.masuk', DashboardController::class);
 
 Route::prefix('admin')->as('admin.')->middleware(['auth', IsAdmin::class])->group(function (){
+    Route::resource('pengajuan', PengajuanController::class);
     Route::resource('masuk', SuratMasukController::class);
     Route::resource('keluar', SuratKeluarController::class);
     Route::resource('disposisi', DisposisiController::class);
@@ -44,5 +52,6 @@ Route::prefix('admin')->as('admin.')->middleware(['auth', IsAdmin::class])->grou
 Route::prefix('kepsek')->as('kepsek.')->middleware(['auth', IsKepsek::class])->group(function(){
     Route::get('masuk', [KepsekController::class, 'index'])->name('masuk.index');
     Route::resource('disposisi', KepsekController::class);
+    Route::get('history', [KepsekController::class, 'riwayat'])->name('history.index');
 });
 

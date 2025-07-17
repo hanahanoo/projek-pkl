@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 use App\Models\SuratMasuk;
+use App\Models\SuratKeluar;
 use App\Models\User;
 use App\Models\Disposisi;
 use Illuminate\Http\Request;
 use Auth;
 class KepsekController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
+        
         $title = 'Hapus Data!';
         $text = "Apakah anda yakin?";
         confirmDelete($title, $text);
@@ -19,9 +26,15 @@ class KepsekController extends Controller
             })->with(['disposisi.user'])->get();
         }
         $listUser = User::where('role', 'user')->get();
-        return view ('admin.masuk.index', compact('suratMasuk', 'listUser'));
+        return view('admin.masuk.index', compact('suratMasuk', 'listUser'));
     }
 
+    public function riwayat()
+    {
+        $suratMasuk = SuratMasuk::latest()->get();
+        $suratKeluar = SuratKeluar::latest()->get();
+        return view('admin.review', compact('suratMasuk', 'suratKeluar'));
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -42,11 +55,6 @@ class KepsekController extends Controller
         $disposisi->user_id = $request->user_id;
         $disposisi->catatan_disposisi = $request->catatan;
         $disposisi->save();
-        if($disposisi){
-            $suratMasuk = SuratMasuk::findOrFail($suratMasukID->id);
-            $suratMasuk->status = 'diproses';
-            $suratMasuk->save();
-        }
         toast('Data berhasil ditambahkan', 'success');
         return redirect()->route('kepsek.masuk.index');
     }

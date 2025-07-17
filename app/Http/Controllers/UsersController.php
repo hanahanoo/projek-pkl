@@ -45,7 +45,7 @@ class UsersController extends Controller
         $user->save();
 
         toast('Data berhasil ditambahkan', 'success');
-        return redirect()->route('users.index');
+        return redirect()->route('admin.users.index');
     }
 
     /**

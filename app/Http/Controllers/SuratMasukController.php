@@ -14,6 +14,10 @@ class SuratMasukController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     public function index()
     {
         $title = 'Hapus Data!';
@@ -94,12 +98,15 @@ class SuratMasukController extends Controller
             'file_surat' => 'nullable|file',
         ]);
         $suratMasuk = SuratMasuk::findOrFail($id);
+        if ($request->hasFile('file_surat')) {
+            $path = $request->file('file_surat')->store('surat_masuk', 'public');
+            $suratMasuk->file_surat = $path;
+        }
         $suratMasuk->no_surat = $request->no_surat;
         $suratMasuk->tgl_surat = $request->tgl_surat;
         $suratMasuk->tgl_terima = $request->tgl_terima;
         $suratMasuk->pengirim = $request->pengirim;
         $suratMasuk->perihal = $request->perihal;
-        $suratMasuk->file_surat = $request->file_surat;
         $suratMasuk->save();
 
         
@@ -119,18 +126,4 @@ class SuratMasukController extends Controller
         return redirect()->route('masuk.index');
     }
 
-    public function download($id)
-    {
-        $surat = SuratMasuk::findOrFail($id);
-
-        // validasi: apakah user emang dapat disposisi surat ini
-        $user_id = Auth::user()->id;
-        $isAuthorized = Disposisi::where('user_id', $user_id)->where('surat_masuk_id', $id)->exists();
-
-        if (!$isAuthorized) {
-            abort(403, 'Lu bukan yang ditugasin, diem aja bro 💀');
-        }
-
-        return response()->download(storage_path('app/public/' . $surat->file_surat));
-    }
 }

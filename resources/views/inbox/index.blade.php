@@ -16,7 +16,7 @@
         </tr>
       </thead>
       <tbody class="table-border-bottom-0">
-        @foreach($disposisi as $item)
+        @forelse($disposisi as $item)
         <tr>
           <td>{{$item->suratMasuk->no_surat}}</td>
           <td>{{$item->suratMasuk->tgl_surat}}</td>
@@ -38,8 +38,16 @@
               </div>
             </div>
           </td>
+        @empty
+<tr>
+  <td colspan="5" class="text-center text-muted py-4">
+    <i class="ri-information-line me-1"></i> Belum ada data surat masuk.
+  </td>
+</tr>
+@endforelse
+
         </tr>
-        @endforeach
+      
       </tbody>
     </table>
   </div>
@@ -104,7 +112,7 @@
         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
           Close
         </button>
-        <button type="submit" class="btn btn-primary">DitindakLanjuti</button>
+        <button type="submit" class="btn btn-primary">Tindak Lanjuti</button>
         </form>
       </div>
     </div>
